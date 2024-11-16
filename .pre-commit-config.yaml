@@ -8,4 +8,3 @@ repos:
     rev: 6.1.0  # Use the latest stable version of Flake8
     hooks:
       - id: flake8
-        args: [--max-line-length=100]  # Adjust configuration as needed
