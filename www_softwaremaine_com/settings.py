@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "modelcluster",
     "taggit",
     "software_maine.apps.SoftwareMaineConfig",
+    "compressor",
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,11 @@ STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+
+COMPRESS_ROOT = BASE_DIR / "static"
+COMPRESS_ENABLED = True
+STATICFILES_FINDERS = ("compressor.finders.CompressorFinder",)
 
 WAGTAIL_SITE_NAME = "Software Maine"
 WAGTAILADMIN_BASE_URL = "https://www.softwaremaine.com"
