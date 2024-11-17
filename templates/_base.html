@@ -1,6 +1,6 @@
 {% load compress %}
 {% load static %}
-
+{% load wagtailcore_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,15 +8,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> </title>
+    <title>{{  page  }}</title>
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endcompress %}
 
 </head>
-    <body class="bg-green-50">
-        <div class="container mx-auto mt-4">
+    <body>
+        <div class="container-fluid mx-auto">
             {% block content %}
             {% endblock content %}
         </div>

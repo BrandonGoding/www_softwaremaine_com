@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
-    "software_maine.apps.SoftwareMaineConfig",
+    "website.apps.WebsiteConfig",
     "compressor",
 ]
 
