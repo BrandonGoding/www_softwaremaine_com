@@ -6,6 +6,8 @@ from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
 
+from theater.blocks import NowPlayingBlock
+
 
 class CallToActionTextChoices(blocks.ChoiceBlock):
     choices = [
@@ -97,6 +99,7 @@ class HomePage(Page):
     content = StreamField(
         [
             ("hero", SimpleCenteredHeroWithBackgroundImageBlock()),
+            ("now_playing", NowPlayingBlock()),
         ],
         blank=True,
     )
