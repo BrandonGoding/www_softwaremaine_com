@@ -11,7 +11,9 @@ class NowPlayingBlock(blocks.StructBlock):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context["now_playing"] = Schedule.objects.filter(
-            start_date__lte=timezone.now(), end_date__gte=timezone.now()
+            start_date__lte=timezone.now(),
+            end_date__gte=timezone.now(),
+            confirmed=True,
         )
         return context
 

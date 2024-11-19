@@ -55,6 +55,7 @@ class Schedule(ClusterableModel):
     movie = models.ForeignKey(Film, on_delete=models.CASCADE, related_name="schedules")
     start_date = models.DateField()
     end_date = models.DateField()
+    confirmed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Schedule for {self.movie.title} ({self.start_date} - {self.end_date})"
@@ -63,6 +64,7 @@ class Schedule(ClusterableModel):
         FieldPanel("movie"),
         FieldPanel("start_date"),
         FieldPanel("end_date"),
+        FieldPanel("confirmed"),
         InlinePanel("showtimes", label="ShowTimes"),
     ]
 
@@ -80,6 +82,7 @@ class ShowTime(models.Model):
     )
     start_time = models.DateTimeField()
     is_sold_out = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["start_time"]
@@ -98,4 +101,5 @@ class ShowTime(models.Model):
         FieldPanel("theater"),
         FieldPanel("start_time"),
         FieldPanel("is_sold_out"),
+        FieldPanel("cancelled"),
     ]
