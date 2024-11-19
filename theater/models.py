@@ -1,7 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.images.models import Image
 from wagtail.snippets.models import register_snippet
 
@@ -18,6 +18,8 @@ class Film(models.Model):
     poster = models.ForeignKey(
         Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
     )
+    imdb_link = models.URLField(null=True, blank=True)
+    youtube_link = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -29,6 +31,13 @@ class Film(models.Model):
         FieldPanel("rating"),
         FieldPanel("release_date"),
         FieldPanel("poster"),
+        MultiFieldPanel(
+            [
+                FieldPanel("imdb_link"),
+                FieldPanel("youtube_link"),
+            ],
+            heading="External Links",
+        ),
     ]
 
 

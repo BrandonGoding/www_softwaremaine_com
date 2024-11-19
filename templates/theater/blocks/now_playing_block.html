@@ -6,35 +6,73 @@
             <p class="mt-6 text-lg/8 text-gray-600">{{ value.block_text }}</p>
         </div>
         <ul role="list" class="-mt-12 space-y-12 divide-y divide-gray-200 xl:col-span-3">
-        {% if now_playing %}
-            {% for scheduled in now_playing %}
-                <li class="flex flex-col gap-10 pt-12 sm:flex-row">
-                    {% image scheduled.movie.poster width-1024 class="aspect-[4/5] w-52 flex-none object-cover" %}
-                    <div class="max-w-xl flex-auto">
-                        <h3 class="text-lg/8 font-semibold tracking-tight text-gray-900">{{ scheduled.movie.title }}</h3>
-                        <p class="text-base/7 text-gray-600">Rated: {{ scheduled.movie.rating }} /
-                            Runtime: {{ scheduled.movie.duration }}m</p>
-                        <p class="mt-6 text-base/7 text-gray-600">
-                            <strong>Description: </strong>{{ scheduled.movie.description }}</p>
-                    </div>
-                </li>
-            {% endfor %}
+            {% if now_playing %}
+                {% for scheduled in now_playing %}
+                    <li class="flex flex-col gap-10 pt-12 sm:flex-row">
+                        {% image scheduled.movie.poster width-1024 class="aspect-[4/5] w-52 flex-none object-cover" %}
+                        <div class="max-w-xl flex-auto">
+                            <h3 class="text-lg/8 font-semibold tracking-tight text-gray-900">{{ scheduled.movie.title }}</h3>
+                            <p class="text-base/7 text-gray-600">Rated: {{ scheduled.movie.rating }} /
+                                Runtime: {{ scheduled.movie.duration }}m</p>
+                            <p class="mt-6 text-base/7 text-gray-600">
+                                <strong>Description: </strong>{{ scheduled.movie.description }}</p>
+                            <ul role="list" class="mt-6 flex gap-x-6">
+                                {% if scheduled.movie.imdb_link %}
+                                    <li>
+                                        <a href="{{ scheduled.movie.imdb_link }}"
+                                           class="text-gray-400 hover:text-gray-500">
+                                            <span class="sr-only">IMDB Link</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if scheduled.movie.youtube_link %}
+                                    <li>
+                                        <a href="{{ scheduled.movie.youtube_link }}"
+                                           class="text-gray-400 hover:text-gray-500">
+                                            <span class="sr-only">YouTube</span>
+                                            <svg
+                                                    class="size-5"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                        d="M23.498 6.186c-.283-1.076-1.12-1.918-2.194-2.207C19.605 3.6 12 3.6 12 3.6s-7.605 0-9.304.38c-1.074.29-1.911 1.131-2.194 2.207C0 7.95 0 12 0 12s0 4.05.502 5.814c.283 1.076 1.12 1.918 2.194 2.207 1.699.38 9.304.38 9.304.38s7.605 0 9.304-.38c1.074-.29 1.911-1.131 2.194-2.207.502-1.764.502-5.814.502-5.814s0-4.05-.502-5.814ZM9.75 15.54V8.46l6.15 3.54-6.15 3.54Z"
+                                                />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
             {% else %}
-            <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
-                  <div class="flex">
-                    <div class="shrink-0">
-                      <svg class="size-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
-                      </svg>
+                <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                    <div class="flex">
+                        <div class="shrink-0">
+                            <svg class="size-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor"
+                                 aria-hidden="true" data-slot="icon">
+                                <path fill-rule="evenodd"
+                                      d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                Currently, we do not have any films scheduled. <strong>CHECK BACK</strong> soon for
+                                updates.
+                            </p>
+                        </div>
                     </div>
-                    <div class="ml-3">
-                      <p class="text-sm text-yellow-700">
-                        Currently, we do not have any films scheduled. <strong>CHECK BACK</strong> soon for updates.
-                      </p>
-                    </div>
-                  </div>
                 </div>
-        {% endif %}
+            {% endif %}
         </ul>
     </div>
 </div>
