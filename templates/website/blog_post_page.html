@@ -1,0 +1,76 @@
+{% extends "_base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/flowbite-typography@1.0.3/dist/typography.min.css">
+{% endblock %}
+{% block content %}
+<main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
+    {% image page.banner_image width-1200 as tmp_photo %}
+  <header class="w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center bg-blend-darken relative" style="background-image:url('{{ tmp_photo.url }}');">
+      <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
+      <div class="absolute top-20 left-1/2 px-4 mx-auto w-full max-w-screen-xl -translate-x-1/2 xl:top-1/2 xl:-translate-y-1/2 xl:px-0">
+          <h1 class="mb-4 max-w-4xl text-2xl font-extrabold leading-none text-white sm:text-3xl lg:text-4xl">{{ page.title }}</h1>
+{#          <p class="text-lg font-normal text-gray-300">Before going digital, you might scribbling down some ideas in a sketchbook.</p>#}
+      </div>
+  </header>
+  <div class="flex relative z-20 justify-between p-6 -m-36 mx-4 max-w-screen-xl bg-white dark:bg-gray-800 rounded xl:-m-32 xl:p-9 xl:mx-auto">
+      <article class="xl:w-[828px] w-full max-w-none format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
+          <div class="flex flex-col lg:flex-row justify-between lg:items-center">
+              <div class="flex items-center space-x-3 text-gray-500 dark:text-gray-400 text-base mb-2 lg:mb-0">
+                  <span>By {{ page.author.display_name }}</span>
+                  {% if page.published_date %}
+                  <span class="bg-gray-300 dark:bg-gray-400 w-2 h-2 rounded-full"></span>
+                  <span>{{ page.published_date }}</span>
+                  {% endif %}
+              </div>
+          </div>
+          {{ page.body|safe }}
+      </article>
+      <aside class="hidden xl:block" aria-labelledby="sidebar-label">
+          <div class="xl:w-[336px] sticky top-6">
+              <h3 id="sidebar-label" class="sr-only">Sidebar</h3>
+              <div class="mb-12">
+                  <h4 class="mb-4 text-sm font-bold text-gray-900 dark:text-white uppercase">Latest posts</h4>
+                  <div class="mb-6 flex items-center">
+                      <a href="#" class="shrink-0">
+                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-1.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 1">
+                      </a>
+                      <div>
+                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Our first office</h5>
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
+                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
+                              Read in 9 minutes
+                          </a>
+                      </div>
+                  </div>
+                  <div class="mb-6 flex items-center">
+                      <a href="#" class="shrink-0">
+                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-2.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 2">
+                      </a>
+                      <div>
+                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Enterprise Design tips</h5>
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
+                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
+                              Read in 14 minutes
+                          </a>
+                      </div>
+                  </div>
+                  <div class="mb-6 flex items-center">
+                      <a href="#" class="shrink-0">
+                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-3.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 3">
+                      </a>
+                      <div>
+                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Partnered up with Google</h5>
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
+                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
+                              Read in 9 minutes
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </aside>
+  </div>
+</main>
+    
+{% endblock %}
