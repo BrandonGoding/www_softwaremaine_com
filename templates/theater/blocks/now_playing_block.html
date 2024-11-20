@@ -16,6 +16,7 @@
                                 Runtime: {{ scheduled.movie.duration }}m</p>
                             <p class="mt-6 text-base/7 text-gray-600">
                                 <strong>Description: </strong>{{ scheduled.movie.description }}</p>
+                                <strong>Next Showtime: {{ scheduled.next_showtime }}</strong>
                             <ul role="list" class="mt-6 flex gap-x-6">
                                 {% if scheduled.movie.imdb_link %}
                                     <li>

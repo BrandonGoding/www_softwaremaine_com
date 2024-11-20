@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
@@ -76,6 +77,15 @@ class Schedule(ClusterableModel):
         FieldPanel("confirmed"),
         InlinePanel("showtimes", label="ShowTimes"),
     ]
+
+    @property
+    def next_showtime(self):
+        next_scheduled = (
+            self.showtimes.filter(start_time__gte=timezone.now())
+            .order_by("start_time")
+            .first()
+        )
+        return next_scheduled.start_time if next_scheduled else None
 
 
 class ShowTime(models.Model):
