@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
+    "blog.apps.BlogConfig",
     "theater.apps.TheaterConfig",
     "website.apps.WebsiteConfig",
     "compressor",
