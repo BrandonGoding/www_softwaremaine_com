@@ -107,4 +107,20 @@ class NowPlayingBlock(blocks.StructBlock):
 
     class Meta:
         label = "Now Playing"
-        template = "theater/blocks/now_playing_block.html"
+        template = "website/blocks/now_playing_block.html"
+
+
+class RecentPostsBlock(blocks.StructBlock):
+
+    def get_context(self, request, *args, **kwargs):
+        from website.models import BlogPostPage
+
+        context = super().get_context(request, *args, **kwargs)
+        context["most_recent_posts"] = BlogPostPage.objects.live().order_by(
+            "-published_date"
+        )[:3]
+        return context
+
+    class Meta:
+        label = "Recent Posts"
+        template = "website/blocks/recent_posts_block.html"

@@ -8,7 +8,11 @@ from wagtail.images.models import Image
 from wagtail.models import Page, Site
 from wagtail.snippets.models import register_snippet
 
-from website.blocks import NowPlayingBlock, SimpleCenteredHeroWithBackgroundImageBlock
+from website.blocks import (
+    NowPlayingBlock,
+    RecentPostsBlock,
+    SimpleCenteredHeroWithBackgroundImageBlock,
+)
 
 
 class HomePage(Page):
@@ -17,6 +21,7 @@ class HomePage(Page):
         [
             ("hero", SimpleCenteredHeroWithBackgroundImageBlock()),
             ("now_playing", NowPlayingBlock()),
+            ("recent_posts", RecentPostsBlock()),
         ],
         blank=True,
     )
@@ -47,9 +52,23 @@ class BlogAuthor(models.Model):
         ordering = ("last_name", "first_name")
 
 
+@register_snippet
+class BlogCategory(models.Model):
+    name = models.CharField(max_length=25)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("site"),
+    ]
+
+    def __str__(self):
+        return self.name
+
+
 class BlogRollPage(Page):
     max_count = 1
-    blog_description = models.CharField(max_length=255)
+    blog_description = models.TextField(blank=True)
 
     parent_page_types = ["website.HomePage"]
     subpage_types = ["website.BlogPostPage"]
@@ -58,10 +77,25 @@ class BlogRollPage(Page):
         FieldPanel("blog_description"),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["blog_posts"] = BlogPostPage.objects.child_of(self).live()
+        return context
+
 
 class BlogPostPage(Page):
     author = models.ForeignKey(
         BlogAuthor, on_delete=models.PROTECT, related_name="posts"
+    )
+    subject_film = models.ForeignKey(
+        to="website.Film",
+        on_delete=models.PROTECT,
+        related_name="reviews",
+        null=True,
+        blank=True,
+    )
+    category = models.ForeignKey(
+        to="website.BlogCategory", on_delete=models.SET_NULL, null=True, blank=True
     )
     body = RichTextField()
     published_date = models.DateField(blank=True, null=True)
@@ -74,16 +108,31 @@ class BlogPostPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("author"),
+        FieldPanel("subject_film"),
+        FieldPanel("category"),
         FieldPanel("published_date"),
         FieldPanel("banner_image"),
         FieldPanel("body"),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["recent_posts"] = (
+            BlogPostPage.objects.child_of(self.get_parent())
+            .exclude(id=self.id)
+            .live()[:3]
+        )
+        context["now_playing"] = Schedule.objects.filter(
+            start_date__lte=timezone.now(),
+            end_date__gte=timezone.now(),
+            confirmed=True,
+        )
+        return context
 
-class MovieReviewPost(BlogPostPage):
-    movie = models.ForeignKey(
-        to="website.Film", on_delete=models.PROTECT, related_name="reviews"
-    )
+    class Meta:
+        verbose_name = "Blog Post"
+        verbose_name_plural = "Blog Posts"
+        ordering = ["-published_date"]
 
 
 @register_snippet
@@ -98,8 +147,8 @@ class Film(models.Model):
     poster = models.ForeignKey(
         Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
     )
-    imdb_link = models.URLField(null=True, blank=True)
-    youtube_link = models.URLField(null=True, blank=True)
+    imdb_id = models.CharField(max_length=15, null=True, blank=True)
+    youtube_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -113,10 +162,10 @@ class Film(models.Model):
         FieldPanel("poster"),
         MultiFieldPanel(
             [
-                FieldPanel("imdb_link"),
-                FieldPanel("youtube_link"),
+                FieldPanel("imdb_id"),
+                FieldPanel("youtube_id"),
             ],
-            heading="External Links",
+            heading="External Keys",
         ),
     ]
 

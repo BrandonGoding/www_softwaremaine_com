@@ -10,7 +10,9 @@
       <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
       <div class="absolute top-20 left-1/2 px-4 mx-auto w-full max-w-screen-xl -translate-x-1/2 xl:top-1/2 xl:-translate-y-1/2 xl:px-0">
           <h1 class="mb-4 max-w-4xl text-2xl font-extrabold leading-none text-white sm:text-3xl lg:text-4xl">{{ page.title }}</h1>
-{#          <p class="text-lg font-normal text-gray-300">Before going digital, you might scribbling down some ideas in a sketchbook.</p>#}
+          {% if page.subject_film %}
+          <p class="text-lg font-normal text-gray-300">A review of the movie {{ page.subject_film }}.</p>
+          {% endif %}
       </div>
   </header>
   <div class="flex relative z-20 justify-between p-6 -m-36 mx-4 max-w-screen-xl bg-white dark:bg-gray-800 rounded xl:-m-32 xl:p-9 xl:mx-auto">
@@ -29,45 +31,37 @@
       <aside class="hidden xl:block" aria-labelledby="sidebar-label">
           <div class="xl:w-[336px] sticky top-6">
               <h3 id="sidebar-label" class="sr-only">Sidebar</h3>
+                {% if recent_posts %}
               <div class="mb-12">
                   <h4 class="mb-4 text-sm font-bold text-gray-900 dark:text-white uppercase">Latest posts</h4>
+                  {% for post in recent_posts %}
                   <div class="mb-6 flex items-center">
-                      <a href="#" class="shrink-0">
-                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-1.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 1">
+                      <a href="{% slugurl post.slug %}" class="shrink-0">
+                          {% image post.banner_image fill-96x96 class="mr-4 max-w-full w-24 h-24 rounded-lg" %}
                       </a>
                       <div>
-                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Our first office</h5>
-                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
-                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
-                              Read in 9 minutes
+                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">{{ post.title }}</h5>
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">{{ post.body|striptags|truncatewords:3 }}</p>
+                          <a href="{% slugurl post.slug %}" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
+                              Read Post
                           </a>
                       </div>
                   </div>
-                  <div class="mb-6 flex items-center">
-                      <a href="#" class="shrink-0">
-                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-2.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 2">
-                      </a>
-                      <div>
-                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Enterprise Design tips</h5>
-                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
-                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
-                              Read in 14 minutes
-                          </a>
-                      </div>
-                  </div>
-                  <div class="mb-6 flex items-center">
-                      <a href="#" class="shrink-0">
-                          <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/image-3.png" class="mr-4 max-w-full w-24 h-24 rounded-lg" alt="Image 3">
-                      </a>
-                      <div>
-                          <h5 class="mb-2 text-lg font-bold leading-tight dark:text-white text-gray-900">Partnered up with Google</h5>
-                          <p class="mb-2 text-gray-500 dark:text-gray-400">Over the past year, Volosoft has undergone changes.</p>
-                          <a href="#" class="inline-flex items-center font-medium underline underline-offset-4 text-primary-600 dark:text-primary-500 hover:no-underline">
-                              Read in 9 minutes
-                          </a>
-                      </div>
-                  </div>
+                  {% endfor %}
               </div>
+                {% endif %}
+          {% if now_playing %}
+          <div class="mb-12">
+                  <h4 class="mb-4 text-sm font-bold text-gray-900 dark:text-white uppercase">Now Playing</h4>
+                  {% for scheduled in now_playing %}
+                  <div class="mb-6 p-4 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                      <a href="#">
+                          {% image scheduled.movie.poster original class="mb-5 rounded-lg" %}
+                      </a>
+                  </div>
+                  {% endfor %}
+              </div>
+          {% endif %}
           </div>
       </aside>
   </div>
