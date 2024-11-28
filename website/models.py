@@ -39,6 +39,9 @@ class HomePage(Page):
 class BlogAuthor(models.Model):
     first_name = models.CharField(max_length=65)
     last_name = models.CharField(max_length=65)
+    avatar = models.ForeignKey(
+        Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
+    )
     sites = models.ManyToManyField(Site)
 
     def __str__(self):
@@ -224,28 +227,17 @@ class ShowTime(models.Model):
     schedule = ParentalKey(
         Schedule, on_delete=models.CASCADE, related_name="showtimes", null=True
     )
-    theater = models.ForeignKey(
-        Theater, on_delete=models.SET_NULL, null=True, related_name="showtimes"
-    )
     start_time = models.DateTimeField()
     is_sold_out = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["start_time"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["theater", "start_time"], name="unique_showtime_per_theater"
-            )
-        ]
 
     def __str__(self):
-        return (
-            f"{self.schedule.movie.title} in {self.theater.name} at {self.start_time}"
-        )
+        return f"{self.schedule.movie.title} at {self.start_time}"
 
     panels = [
-        FieldPanel("theater"),
         FieldPanel("start_time"),
         FieldPanel("is_sold_out"),
         FieldPanel("cancelled"),

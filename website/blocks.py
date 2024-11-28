@@ -1,5 +1,8 @@
+from collections import defaultdict
+
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.timezone import localtime
 from wagtail import blocks
 from wagtail.blocks import PageChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -98,11 +101,29 @@ class NowPlayingBlock(blocks.StructBlock):
         from website.models import Schedule
 
         context = super().get_context(request, *args, **kwargs)
-        context["now_playing"] = Schedule.objects.filter(
-            start_date__lte=timezone.now(),
-            end_date__gte=timezone.now(),
+        current_time = timezone.now()
+
+        now_playing = Schedule.objects.filter(
+            start_date__lte=current_time,
+            end_date__gte=current_time,
             confirmed=True,
         )
+
+        grouped_showtimes = []
+        for schedule in now_playing:
+            showtimes = defaultdict(list)
+            for showtime in schedule.showtimes.filter(start_time__gte=current_time):
+                local_start_time = localtime(showtime.start_time)
+                showtimes[local_start_time.date()].append(local_start_time.time())
+            grouped_showtimes.append(
+                {
+                    "movie": schedule.movie,
+                    "showtimes_by_date": dict(showtimes),
+                    "next_showtime": schedule.next_showtime,
+                }
+            )
+
+        context["now_playing"] = grouped_showtimes
         return context
 
     class Meta:

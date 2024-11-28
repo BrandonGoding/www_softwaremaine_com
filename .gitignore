@@ -168,3 +168,10 @@ static/CACHE/
 node_modules/
 static/src/output.css
 media/
+
+/static/wagtailadmin/
+/static/wagtaildocs/
+/static/wagtailembeds/
+/static/wagtailimages/
+/static/wagtailsnippets/
+/static/wagtailusers/
