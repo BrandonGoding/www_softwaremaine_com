@@ -24,10 +24,16 @@
             {% endif %}
           <div class="mt-10 flex items-center justify-center gap-x-6">
                 {% if value.primary_button.text and value.primary_button.page_link %}
-                    <a href="{{ value.primary_button.page_link }}" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">{{ value.primary_button.text }}</a>
+                    <a href="{{ value.primary_button.page_link.url }}" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">{{ value.primary_button.text }}</a>
+                {% endif %}
+                {% if value.primary_button.text and value.primary_button.anchor_link %}
+                    <a href="#{{ value.primary_button.anchor_link }}" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">{{ value.primary_button.text }}</a>
                 {% endif %}
               {% if value.secondary_button.text and value.secondary_button.page_link %}
-                  <a href="{{ value.secondary_button.page_link }}" class="text-sm/6 font-semibold text-white">{{ value.secondary_button.text }} <span aria-hidden="true">→</span></a>
+                  <a href="{{ value.secondary_button.page_link.url }}" class="text-sm/6 font-semibold text-white">{{ value.secondary_button.text }} <span aria-hidden="true">→</span></a>
+              {% endif %}
+                {% if value.secondary_button.text and value.secondary_button.anchor_link %}
+                  <a href="#{{ value.secondary_button.anchor_link }}" class="text-sm/6 font-semibold text-white">{{ value.secondary_button.text }} <span aria-hidden="true">→</span></a>
               {% endif %}
           </div>
         </div>

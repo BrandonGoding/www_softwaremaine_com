@@ -82,7 +82,9 @@ class BlogRollPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context["blog_posts"] = BlogPostPage.objects.child_of(self).live()
+        context["blog_posts"] = (
+            BlogPostPage.objects.child_of(self).order_by("-published_date").live()
+        )
         return context
 
 
@@ -123,6 +125,7 @@ class BlogPostPage(Page):
         context["recent_posts"] = (
             BlogPostPage.objects.child_of(self.get_parent())
             .exclude(id=self.id)
+            .order_by("-published_date")
             .live()[:3]
         )
         context["now_playing"] = Schedule.objects.filter(

@@ -58,6 +58,9 @@ class CallToAction(blocks.StructBlock):
 class ButtonBlock(blocks.StructBlock):
     text = blocks.CharBlock(required=False, help_text="")
     page_link = PageChooserBlock(required=False)
+    anchor_link = blocks.CharBlock(
+        required=False, help_text="Enter the ID attribute you would like to link"
+    )
 
     def clean(self, value):
         # Call the parent clean method to retain base validation
@@ -65,11 +68,18 @@ class ButtonBlock(blocks.StructBlock):
 
         text = cleaned_data.get("text")
         page_link = cleaned_data.get("page_link")
+        anchor_link = cleaned_data.get("anchor_link")
 
-        # Custom validation: if one is filled, both must be filled
-        if (text and not page_link) or (page_link and not text):
+        # Rule 1: If page_link or anchor_link is provided, text must also be provided
+        if (page_link or anchor_link) and not text:
             raise ValidationError(
-                "Both 'text' and 'page_link' must be filled out if one is provided."
+                "The 'text' field is required if 'page_link' or 'anchor_link' is provided."
+            )
+
+        # Rule 2: Only one of page_link or anchor_link can be provided
+        if page_link and anchor_link:
+            raise ValidationError(
+                "You can only provide either 'page_link' or 'anchor_link', not both."
             )
 
         return cleaned_data
