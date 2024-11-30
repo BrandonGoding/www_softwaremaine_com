@@ -6,7 +6,9 @@
   <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
           <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ page.title }}</h2>
+          {% if not blog_posts.has_previous %}
           <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">{{ page.blog_description }}</p>
+          {% endif %}
       </div> 
       <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {% for post in blog_posts %}
@@ -30,8 +32,33 @@
               </div>
           </article>
           {% endfor %}
-      </div>  
+      </div> 
+  <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
+  <div class="hidden sm:block">
+    <p class="text-sm text-gray-700">
+      Showing
+      <span class="font-medium">{{ start_index }}</span>
+      to
+      <span class="font-medium">{{ end_index }}</span>
+      of
+      <span class="font-medium">{{ total_posts }}</span>
+      results
+    </p>
   </div>
+  <div class="flex flex-1 justify-between sm:justify-end">
+  {% if blog_posts.has_previous %}
+    <a href="?page={{ blog_posts.previous_page_number }}" class="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</a>
+    {% endif %}
+      {% if blog_posts.has_next %}
+      <a href="?page={{ blog_posts.next_page_number }}" class="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</a>
+    {% endif %}
+  </div>
+</nav>
+
+  </div>
+    
 </section>
+    
+    
     
 {% endblock %}

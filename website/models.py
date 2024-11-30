@@ -1,3 +1,4 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
@@ -82,9 +83,28 @@ class BlogRollPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context["blog_posts"] = (
+        # Get all posts
+        all_posts = (
             BlogPostPage.objects.child_of(self).order_by("-published_date").live()
         )
+        # Paginate all posts by 2 per page
+        paginator = Paginator(all_posts, 6)
+        # Try to get the ?page=x value
+        page = request.GET.get("page")
+        try:
+            # If the page exists and the ?page=x is an int
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            # If the ?page=x is not an int; show the first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            # If the ?page=x is out of range (too high most likely)
+            # Then return the last page
+            posts = paginator.page(paginator.num_pages)
+        context["blog_posts"] = posts
+        context["start_index"] = posts.start_index()
+        context["end_index"] = posts.end_index()
+        context["total_posts"] = all_posts.count()
         return context
 
 
