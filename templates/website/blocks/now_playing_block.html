@@ -6,7 +6,9 @@
             <p class="hidden sm:block mt-6 text-lg/8 text-gray-600">{{ value.block_text }}</p>
             <div class="mt-2 text-center sm:text-left">
                 {% for film in now_playing %}
-                    <h3 class="mt-6 font-bold">{{ film.movie.title }}</h3>
+                    {% image film.movie.poster width-300 as tmp_photo %}
+                    <div class="bg-white bg-opacity-80 sm:bg-opacity-100 sm:bg-none mb-6 py-6 bg-center bg-no-repeat bg-blend-overlay" style="background-image:url('{{ tmp_photo.url }}');">
+                    <h3 class="sm:mt-6 font-bold">{{ film.movie.title }}</h3>
                     <p class="sm:hidden text-base/7 text-gray-600">Rated: {{ film.movie.rating }} /
                                 Runtime: {{ film.movie.duration }}m</p>
                     {% for date, times in film.showtimes_by_date.items %}
@@ -17,6 +19,7 @@
                             {% endfor %}
                         </p>
                     {% endfor %}
+                    </div>
                 {% endfor %}
             </div>
             

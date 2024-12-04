@@ -141,7 +141,7 @@ else:
 
 
 COMPRESS_ROOT = BASE_DIR / "static"
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
 STATICFILES_FINDERS = [
     "compressor.finders.CompressorFinder",
     "django.contrib.staticfiles.finders.FileSystemFinder",
