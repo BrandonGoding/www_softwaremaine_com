@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
-<div class="bg-gray-900">
-  <div class="relative isolate overflow-hidden pt-14">
+<div class="bg-black">
+  <div class="relative isolate overflow-hidden">
     {% image value.background_image width-2830 as tmp_photo %}
     <img src="{{ tmp_photo.url }}" alt="{{ tmp_photo.alt }}" class="absolute inset-0 -z-10 size-full object-cover opacity-20">
       <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
