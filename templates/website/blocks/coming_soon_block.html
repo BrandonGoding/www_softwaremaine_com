@@ -1,0 +1,32 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<aside aria-label="Related articles" class="py-8  {% if not dark_mode %}bg-white{% else %}bg-gray-900{% endif %} lg:py-16 antialiased">
+  <div class="px-4 mx-auto w-full max-w-screen-xl">
+      <h2 class="mb-8 text-2xl font-bold  {% if not dark_mode %}text-gray-900{% else %}text-white{% endif %}">Coming Soon</h2>
+      <div id="animation-carousel" data-carousel="slide">
+          <div class="relative rounded-lg">
+              <div class="duration-700 ease-in-out {% if not dark_mode %}bg-white{% else %}bg-gray-900{% endif %}">
+                  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                      {% for scheduled_film in coming_soon %}
+                      <article class="p-4 mx-auto max-w-sm  rounded-lg shadow-md border {% if not dark_mode %}bg-white border-gray-200{% else %}bg-gray-800 border-gray-700{% endif %}">
+                          <a href="#">
+                              {% image scheduled_film.movie.banner_image fill-350x188 class="mb-5 rounded-lg" %}
+                          </a>
+                          <div class="flex items-center mb-3 space-x-2">
+                              <div class="font-medium {% if dark_mode %}text-white{% endif %}">
+                                  <div>Starting: {{ scheduled_film.start_date }}</div>
+                                  <div class="text-sm font-normal {% if not dark_mode %}text-gray-500{% else %}text-gray-400{% endif %}">Rated: {{ scheduled_film.movie.rating }} /
+                                Runtime: {{ scheduled_film.movie.duration }}m</div>
+                              </div>
+                          </div>
+                          <h3 class="mb-2 text-xl font-bold tracking-tight lg:text-2xl {% if not dark_mode %}text-gray-900{% else %}text-white{% endif %}">
+                              <a href="#">{{ scheduled_film.movie.title }}</a>
+                          </h3>
+                          <p class="mb-3 {% if not dark_mode %}text-gray-500{% else %}text-gray-400{% endif %}">{{ scheduled_film.movie.description }}</p>
+                      </article>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</aside>

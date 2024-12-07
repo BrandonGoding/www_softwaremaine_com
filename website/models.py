@@ -10,6 +10,7 @@ from wagtail.models import Page, Site
 from wagtail.snippets.models import register_snippet
 
 from website.blocks import (
+    ComingSoonBlock,
     NowPlayingBlock,
     RecentPostsBlock,
     SimpleCenteredHeroWithBackgroundImageBlock,
@@ -21,6 +22,7 @@ class HomePage(Page):
     content = StreamField(
         [
             ("hero", SimpleCenteredHeroWithBackgroundImageBlock()),
+            ("coming_soon", ComingSoonBlock()),
             ("now_playing", NowPlayingBlock()),
             ("recent_posts", RecentPostsBlock()),
         ],
@@ -173,6 +175,9 @@ class Film(models.Model):
     poster = models.ForeignKey(
         Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
     )
+    banner_image = models.ForeignKey(
+        Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
+    )
     imdb_id = models.CharField(max_length=15, null=True, blank=True)
     youtube_id = models.CharField(max_length=15, null=True, blank=True)
 
@@ -186,6 +191,7 @@ class Film(models.Model):
         FieldPanel("rating"),
         FieldPanel("release_date"),
         FieldPanel("poster"),
+        FieldPanel("banner_image"),
         MultiFieldPanel(
             [
                 FieldPanel("imdb_id"),

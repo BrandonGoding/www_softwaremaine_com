@@ -141,6 +141,27 @@ class NowPlayingBlock(blocks.StructBlock):
         template = "website/blocks/now_playing_block.html"
 
 
+class ComingSoonBlock(blocks.StructBlock):
+    def get_context(self, request, *args, **kwargs):
+        from website.models import Schedule
+
+        context = super().get_context(request, *args, **kwargs)
+        current_time = timezone.now()
+
+        coming_soon = Schedule.objects.filter(
+            start_date__gt=current_time,
+            confirmed=True,
+        )
+
+        context["coming_soon"] = coming_soon
+        context["dark_mode"] = True
+        return context
+
+    class Meta:
+        label = "Coming Soon"
+        template = "website/blocks/coming_soon_block.html"
+
+
 class RecentPostsBlock(blocks.StructBlock):
 
     def get_context(self, request, *args, **kwargs):
