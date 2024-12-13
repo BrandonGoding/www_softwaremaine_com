@@ -39,9 +39,8 @@
                                     Showtime:</strong> {{ scheduled.next_showtime }}</p>
                             {% endif %}
                             <ul role="list" class="mt-6 flex gap-x-6">
-                                {% if scheduled.movie.imdb_id %}
                                     <li>
-                                        <a href="https://www.imdb.com/title/{{ scheduled.movie.imdb_id }}/"
+                                        <a href="{% slugurl scheduled.movie.slug %}"
                                            class="text-gray-400 hover:text-gray-500">
                                             <span class="sr-only">IMDB Link</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -51,7 +50,6 @@
                                             </svg>
                                         </a>
                                     </li>
-                                {% endif %}
                                 {% if scheduled.movie.youtube_id %}
                                     <li>
                                         <a href="https://www.youtube.com/watch?v={{ scheduled.movie.youtube_id }}"

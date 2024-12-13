@@ -1,0 +1,71 @@
+{% extends "_base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+
+    <!--
+Install the "flowbite-typography" NPM package to apply styles and format the article content:
+
+URL: https://flowbite.com/docs/components/typography/
+-->
+    {{ page.omdb_json }}
+<main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
+    {% image page.banner_image original as tmp_photo %}
+  <header class="w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center bg-blend-darken relative" style="background-image:url('{{ tmp_photo.url }}');">
+      <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
+      <div class="absolute top-20 left-1/2 px-4 mx-auto w-full max-w-screen-xl -translate-x-1/2 xl:top-1/2 xl:-translate-y-1/2 xl:px-0">
+          <span class="block mb-4 text-gray-300">Release Date <a href="#" class="font-semibold text-white hover:underline">{{ page.release_date }}</a></span>
+          <h1 class="mb-4 max-w-4xl text-2xl font-extrabold leading-none text-white sm:text-3xl lg:text-4xl">{{ page.title }}</h1>
+      </div>
+  </header>
+  <div class="flex relative z-20 justify-between p-6 -m-36 mx-4 max-w-screen-xl bg-white dark:bg-gray-800 rounded xl:-m-32 xl:p-9 xl:mx-auto">
+      <article class="xl:w-[828px] w-full max-w-none format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
+          <section class="bg-white dark:bg-gray-900">
+            <div class="px-4 mx-auto max-w-screen-xl text-center">
+                <h2 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white tracking-tight">
+                    {{ page.title }}</h2>
+                <h3 class="block mb-4 text-gray-800">Rated: {{ page.rating }} - Running Time: {{ page.duration }} minutes</h3>
+                <p class="mb-8 font-light text-gray-500 md:text-lg lg:text-xl sm:px-16 dark:text-gray-400">{{ page.description }}</p>
+                {% if page.youtube_id %}
+                <iframe class="mx-auto w-full max-w-2xl h-64 rounded-lg sm:h-96" src="https://www.youtube.com/embed/{{ page.youtube_id  }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% endif %}
+            </div>
+        </section>
+      </article>
+      <aside class="hidden xl:block" aria-labelledby="sidebar-label">
+          <div class="xl:w-[336px] sticky top-6">
+              <h3 id="sidebar-label" class="sr-only">Sidebar</h3>
+{#              <div class="mb-8">#}
+{#                  <h4 class="mb-2 text-sm font-bold text-gray-900 dark:text-white uppercase">Flowbite News morning headlines</h4>#}
+{#                  <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">Get all the stories you need-to-know from the most powerful name in news delivered first thing every morning to your inbox</p>#}
+{#                  <button type="button" data-modal-target="newsletter-modal" data-modal-toggle="newsletter-modal" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 text-center w-full">Subscribe</button>#}
+{#              </div>#}
+              <div>
+                  {% if page.omdb_json.Poster %}
+                  <img src="{{ page.omdb_json.Poster }}" class="w-full img-responsive" alt="{{ page.title }} movie poster" />
+                  {% endif %}
+              </div>
+          </div>
+      </aside>
+  </div>
+</main>
+
+    {% if page.production_stills.exists %}
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:px-12 sm:text-center lg:py-16">
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Scenes from <em>{{ page.title }}</em>.</h2>
+        <div class="gap-4 mt-8 sm:grid sm:grid-cols-4 sm:mt-12">
+            {% for screenshot in page.production_stills.all|slice:":6" %}
+                {% if forloop.counter == 1 %}
+                    {% image screenshot.image fill-584x237 class="col-span-2 mb-4 sm:mb-0 rounded-lg"  %}
+                {% elif forloop.counter == 5 %}
+                    {% image screenshot.image fill-584x237 class="hidden col-span-2 sm:block rounded-lg" %}
+                {% else %}
+                    {% image screenshot.image fill-284x237 class="col-span-1 rounded-lg"  %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+    {% endif %}
+
+{% endblock content %}

@@ -3,10 +3,16 @@ from django.db import models
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.panels import (
+    FieldPanel,
+    InlinePanel,
+    MultiFieldPanel,
+    ObjectList,
+    TabbedInterface,
+)
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.models import Image
-from wagtail.models import Page, Site
+from wagtail.models import Orderable, Page, Site
 from wagtail.snippets.models import register_snippet
 
 from website.blocks import (
@@ -15,6 +21,7 @@ from website.blocks import (
     RecentPostsBlock,
     SimpleCenteredHeroWithBackgroundImageBlock,
 )
+from website.services import omdb_service
 
 
 class HomePage(Page):
@@ -35,7 +42,12 @@ class HomePage(Page):
     ]
 
     # Prevent any subpages from being created under HomePage
-    subpage_types = ["website.BlogRollPage"]
+    subpage_types = ["website.BlogRollPage", "website.FilmArchivePage"]
+
+
+class FilmArchivePage(Page):
+    parent_page_types = ["website.HomePage"]
+    subpage_types = ["website.Film"]
 
 
 @register_snippet
@@ -163,9 +175,16 @@ class BlogPostPage(Page):
         ordering = ["-published_date"]
 
 
-@register_snippet
-class Film(models.Model):
-    title = models.CharField(max_length=255)
+class ProductionStill(Orderable):
+    page = ParentalKey(
+        "website.Film", on_delete=models.CASCADE, related_name="production_stills"
+    )
+    image = models.ForeignKey(
+        Image, on_delete=models.SET_NULL, related_name="+", blank=True, null=True
+    )
+
+
+class Film(Page):
     description = models.TextField(blank=True, null=True)
     duration = models.PositiveIntegerField(help_text="Duration in minutes")
     rating = models.CharField(
@@ -180,12 +199,12 @@ class Film(models.Model):
     )
     imdb_id = models.CharField(max_length=15, null=True, blank=True)
     youtube_id = models.CharField(max_length=15, null=True, blank=True)
+    omdb_json = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.title
 
-    panels = [
-        FieldPanel("title"),
+    content_panels = Page.content_panels + [
         FieldPanel("duration"),
         FieldPanel("description"),
         FieldPanel("rating"),
@@ -196,10 +215,32 @@ class Film(models.Model):
             [
                 FieldPanel("imdb_id"),
                 FieldPanel("youtube_id"),
+                FieldPanel("omdb_json"),
             ],
             heading="External Keys",
         ),
+        InlinePanel("production_stills", label="Production Still"),
     ]
+
+    schedule_content_panels = [InlinePanel("schedules", label="Schedule")]
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(content_panels, heading="Content"),
+            ObjectList(schedule_content_panels, heading="Schedules"),
+            ObjectList(Page.promote_panels, heading="Promote"),
+        ]
+    )
+
+    def save(self, *args, **kwargs):
+        if self.omdb_json is None and self.imdb_id:
+            try:
+                imdb_data = omdb_service.get_movie_data_from_imdb(self.imdb_id)
+            except Exception as e:
+                print(e)
+                imdb_data = None
+            self.omdb_json = imdb_data
+        super(Film, self).save(*args, **kwargs)
 
 
 @register_snippet
@@ -216,13 +257,14 @@ class Theater(models.Model):
     ]
 
 
-@register_snippet
 class Schedule(ClusterableModel):
     """
     A Schedule groups ShowTimes for a specific movie.
     """
 
-    movie = models.ForeignKey(Film, on_delete=models.CASCADE, related_name="schedules")
+    movie = ParentalKey(
+        "website.Film", on_delete=models.CASCADE, related_name="schedules"
+    )
     start_date = models.DateField()
     end_date = models.DateField()
     confirmed = models.BooleanField(default=False)

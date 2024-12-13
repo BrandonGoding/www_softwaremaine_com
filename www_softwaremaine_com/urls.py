@@ -28,8 +28,10 @@ if settings.DEBUG:
     urlpatterns += [
         path("cms/", include(wagtailadmin_urls)),
     ]
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += [
     path("documents/", include(wagtaildocs_urls)),
     path("", include(wagtail_urls)),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

@@ -8,7 +8,7 @@
                   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                       {% for scheduled_film in coming_soon %}
                       <article class="p-4 mx-auto max-w-sm  rounded-lg shadow-md border {% if not dark_mode %}bg-white border-gray-200{% else %}bg-gray-800 border-gray-700{% endif %}">
-                          <a href="#">
+                          <a href="{% slugurl scheduled_film.movie.slug %}">
                               {% image scheduled_film.movie.banner_image fill-350x188 class="mb-5 rounded-lg" %}
                           </a>
                           <div class="flex items-center mb-3 space-x-2">
@@ -19,7 +19,7 @@
                               </div>
                           </div>
                           <h3 class="mb-2 text-xl font-bold tracking-tight lg:text-2xl {% if not dark_mode %}text-gray-900{% else %}text-white{% endif %}">
-                              <a href="#">{{ scheduled_film.movie.title }}</a>
+                              <a href="{% slugurl scheduled_film.movie.slug %}">{{ scheduled_film.movie.title }}</a>
                           </h3>
                           <p class="mb-3 {% if not dark_mode %}text-gray-500{% else %}text-gray-400{% endif %}">{{ scheduled_film.movie.description }}</p>
                       </article>

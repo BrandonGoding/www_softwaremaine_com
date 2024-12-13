@@ -134,7 +134,7 @@ if DEBUG is False:
     MEDIA_URL = f"https://{AWS_CLOUDFRONT_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/"
     DEFAULT_FILE_STORAGE = "websites.storage_backends.PublicMediaStorage"
 else:
-    STATIC_URL = "static/"
+    STATIC_URL = "/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
@@ -153,3 +153,5 @@ WAGTAILADMIN_BASE_URL = "https://www.softwaremaine.com"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 WAGTAILDOCS_EXTENSIONS = ["pdf"]
+
+OMDB_API_KEY = config("OMDB_API_KEY")
