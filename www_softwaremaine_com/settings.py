@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
+    "wagtailseo",
+    "wagtail.contrib.settings",
     "wagtail.sites",
     "wagtail.users",
     "wagtail.snippets",
@@ -77,6 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "wagtail.contrib.settings.context_processors.settings",
             ],
         },
     },
@@ -134,11 +137,11 @@ if DEBUG is False:
     MEDIA_URL = f"https://{AWS_CLOUDFRONT_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/"
     DEFAULT_FILE_STORAGE = "websites.storage_backends.PublicMediaStorage"
 else:
-    STATIC_URL = "/static/"
+
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
-
+    STATIC_URL = "/static/"
 
 COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_ENABLED = False

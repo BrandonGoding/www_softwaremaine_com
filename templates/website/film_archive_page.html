@@ -1,0 +1,62 @@
+{% extends "_base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+
+    <section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
+          <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ page.title }}</h2>
+      </div> 
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {% for post in films %}
+          <article class="p-4 mx-auto max-w-sm bg-white rounded-lg shadow-md border border-gray-200 dark:border-gray-800 dark:bg-gray-800 dark:border-gray-700">
+                          <a href="{% slugurl post.slug %}">
+                              {% image post.banner_image fill-350x188 class="mb-5 rounded-lg" %}
+                          </a>
+                          <div class="flex items-center mb-3 space-x-2">
+                              {% image post.author.avatar fill-256x256 class="w-8 h-8 rounded-full" %}
+                              <div class="font-medium dark:text-white">
+                                  <div>{{ post.author.display_name }}</div>
+                                  <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                      {{ post.published_date }}</div>
+                              </div>
+                          </div>
+                          <h3 class="mb-2 text-xl font-bold tracking-tight text-gray-900 lg:text-2xl dark:text-white">
+                              <a href="{% slugurl post.slug %}">{{ post.title }}</a>
+                          </h3>
+                          <p class="mb-3 text-gray-500 dark:text-gray-400">{{ post.description }}</p>
+                          <a href="{% slugurl post.slug %}" class="inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 hover:no-underline">
+                              Film Info <svg class="mt-px ml-1 w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/></svg> 
+                          </a>
+                      </article>
+          {% endfor %}
+      </div> 
+  <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
+  <div class="hidden sm:block">
+    <p class="text-sm text-gray-700">
+      Showing
+      <span class="font-medium">{{ start_index }}</span>
+      to
+      <span class="font-medium">{{ end_index }}</span>
+      of
+      <span class="font-medium">{{ total_posts }}</span>
+      results
+    </p>
+  </div>
+  <div class="flex flex-1 justify-between sm:justify-end">
+  {% if blog_posts.has_previous %}
+    <a href="?page={{ blog_posts.previous_page_number }}" class="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</a>
+    {% endif %}
+      {% if blog_posts.has_next %}
+      <a href="?page={{ blog_posts.next_page_number }}" class="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</a>
+    {% endif %}
+  </div>
+</nav>
+
+  </div>
+    
+</section>
+    
+    
+    
+{% endblock %}

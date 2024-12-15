@@ -14,6 +14,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.images.models import Image
 from wagtail.models import Orderable, Page, Site
 from wagtail.snippets.models import register_snippet
+from wagtailseo.models import SeoMixin, SeoType
 
 from website.blocks import (
     ComingSoonBlock,
@@ -24,7 +25,7 @@ from website.blocks import (
 from website.services import omdb_service
 
 
-class HomePage(Page):
+class HomePage(SeoMixin, Page):
     # Define the StreamField using your custom block
     content = StreamField(
         [
@@ -36,7 +37,8 @@ class HomePage(Page):
         blank=True,
     )
 
-    # Define the content panels for the Wagtail admin interface
+    promote_panels = SeoMixin.seo_panels
+
     content_panels = Page.content_panels + [
         FieldPanel("content"),
     ]
@@ -45,9 +47,34 @@ class HomePage(Page):
     subpage_types = ["website.BlogRollPage", "website.FilmArchivePage"]
 
 
-class FilmArchivePage(Page):
+class FilmArchivePage(SeoMixin, Page):
     parent_page_types = ["website.HomePage"]
     subpage_types = ["website.Film"]
+    promote_panels = SeoMixin.seo_panels
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # Get all posts
+        all_films = Film.objects.child_of(self).live()
+        # Paginate all posts by 2 per page
+        paginator = Paginator(all_films, 6)
+        # Try to get the ?page=x value
+        page = request.GET.get("page")
+        try:
+            # If the page exists and the ?page=x is an int
+            films = paginator.page(page)
+        except PageNotAnInteger:
+            # If the ?page=x is not an int; show the first page
+            films = paginator.page(1)
+        except EmptyPage:
+            # If the ?page=x is out of range (too high most likely)
+            # Then return the last page
+            posts = paginator.page(paginator.num_pages)
+        context["films"] = films
+        context["start_index"] = films.start_index()
+        context["end_index"] = films.end_index()
+        context["total_films"] = all_films.count()
+        return context
 
 
 @register_snippet
@@ -84,7 +111,7 @@ class BlogCategory(models.Model):
         return self.name
 
 
-class BlogRollPage(Page):
+class BlogRollPage(SeoMixin, Page):
     max_count = 1
     blog_description = models.TextField(blank=True)
 
@@ -94,6 +121,7 @@ class BlogRollPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("blog_description"),
     ]
+    promote_panels = SeoMixin.seo_panels
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
@@ -122,7 +150,7 @@ class BlogRollPage(Page):
         return context
 
 
-class BlogPostPage(Page):
+class BlogPostPage(SeoMixin, Page):
     author = models.ForeignKey(
         BlogAuthor, on_delete=models.PROTECT, related_name="posts"
     )
@@ -145,6 +173,8 @@ class BlogPostPage(Page):
     parent_page_types = ["website.BlogRollPage"]
     subpage_types = []
 
+    seo_content_type = SeoType.ARTICLE
+    promote_panels = SeoMixin.seo_panels
     content_panels = Page.content_panels + [
         FieldPanel("author"),
         FieldPanel("subject_film"),
@@ -184,7 +214,7 @@ class ProductionStill(Orderable):
     )
 
 
-class Film(Page):
+class Film(SeoMixin, Page):
     description = models.TextField(blank=True, null=True)
     duration = models.PositiveIntegerField(help_text="Duration in minutes")
     rating = models.CharField(
@@ -204,6 +234,7 @@ class Film(Page):
     def __str__(self):
         return self.title
 
+    promote_panels = SeoMixin.seo_panels
     content_panels = Page.content_panels + [
         FieldPanel("duration"),
         FieldPanel("description"),
@@ -241,20 +272,6 @@ class Film(Page):
                 imdb_data = None
             self.omdb_json = imdb_data
         super(Film, self).save(*args, **kwargs)
-
-
-@register_snippet
-class Theater(models.Model):
-    name = models.CharField(max_length=50)
-    capacity = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.name
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("capacity"),
-    ]
 
 
 class Schedule(ClusterableModel):
