@@ -60,7 +60,8 @@ class Migration(migrations.Migration):
                         (),
                         {
                             "default": "en-US",
-                            "help_text": "If the action is offered in multiple languages, create separate actions for each language.",
+                            "help_text": "If the action is offered in multiple languages, create separate actions for "
+                            "each language.",
                             "verbose_name": "Language",
                         },
                     ),
@@ -102,7 +103,8 @@ class Migration(migrations.Migration):
                         (),
                         {
                             "form_classname": "monospace",
-                            "help_text": "Additional JSON-LD inserted into the Action dictionary. Must be properties of https://schema.org/Action.",
+                            "help_text": "Additional JSON-LD inserted into the Action dictionary. Must be properties of"
+                            " https://schema.org/Action.",
                             "required": False,
                             "verbose_name": "Additional action markup",
                         },
@@ -130,7 +132,8 @@ class Migration(migrations.Migration):
             name="struct_org_address_country",
             field=models.CharField(
                 blank=True,
-                help_text="For example, USA. Two-letter ISO 3166-1 alpha-2 country code is also acceptable https://en.wikipedia.org/wiki/ISO_3166-1",
+                help_text="For example, USA. Two-letter ISO 3166-1 alpha-2 country code is also acceptable "
+                "https://en.wikipedia.org/wiki/ISO_3166-1",
                 max_length=255,
                 verbose_name="Country",
             ),
