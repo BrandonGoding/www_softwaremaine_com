@@ -1,0 +1,18 @@
+<div>
+    {% if error %}
+        <div class="rounded-md bg-yellow-50 p-4">
+          <div class="flex justify-center items-center">
+            <div class="ml-3">
+              <div class="mt-2 text-sm text-yellow-700">
+                <p>{{ error }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    {% elif balance %}
+        <p>Your gift card balance is: <strong>{{ balance }}</strong></p>
+    {% else %}
+        <p>No balance information available. Please try again.</p>
+    {% endif %}
+</div>

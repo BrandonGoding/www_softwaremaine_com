@@ -158,3 +158,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 WAGTAILDOCS_EXTENSIONS = ["pdf"]
 
 OMDB_API_KEY = config("OMDB_API_KEY")
+
+SQUARE_ACCESS_TOKEN = config("SQUARE_ACCESS_TOKEN")
+SQUARE_API_URL = "https://connect.squareup.com/v2/gift-cards"

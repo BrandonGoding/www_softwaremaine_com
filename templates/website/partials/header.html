@@ -23,7 +23,12 @@
         <a href="/#NowPlayingBlock" class="text-sm/6 font-semibold text-gray-900">Now Playing</a>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a href="#" class="text-sm/6 font-semibold text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
+      <a href="#" class="trigger-main-modal text-sm/6 font-semibold text-gray-900"
+         hx-get="{% url 'gift_card_modal' %}" 
+         hx-target="#modal-body" 
+         hx-trigger="click"
+         data-bs-toggle="modal" 
+         data-bs-target="#mainModal">Check Gift Card <span aria-hidden="true">&rarr;</span></a>
     </div>
   </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->

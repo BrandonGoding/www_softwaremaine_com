@@ -22,6 +22,8 @@ from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from website import views as website_views
+
 urlpatterns = []
 
 if settings.DEBUG:
@@ -32,6 +34,10 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += [
+    path("gift-card-modal/", website_views.gift_card_modal, name="gift_card_modal"),
+    path(
+        "gift-card-balance/", website_views.gift_card_balance, name="gift_card_balance"
+    ),
     path("documents/", include(wagtaildocs_urls)),
     path("", include(wagtail_urls)),
 ]
