@@ -1,9 +1,13 @@
+import logging
+
 import requests
 from django.conf import settings
 from django.shortcuts import render
 from requests.exceptions import RequestException
 
 from .forms import GiftCardBalanceForm
+
+logger = logging.getLogger(__name__)
 
 
 def gift_card_modal(request):
@@ -43,9 +47,14 @@ def gift_card_balance(request):
             data = response.json()
             amount = data.get("gift_card", {}).get("balance_money", {}).get("amount", 0)
             balance = "${:,.2f}".format(amount / 100 if amount else 0)
-        except RequestException:
-            error = "An error occurred while retrieving the gift card balance. Please try again later."
-        except KeyError:
+        except RequestException as e:
+            logger.error(e)
+            error = (
+                "An error occurred while retrieving the gift card balance. "
+                "Please try again later."
+            )
+        except KeyError as e:
+            logger.error(e)
             error = "Unexpected response format from the API."
     else:
         error = "Invalid input. Please check your gift card number."
